@@ -27,7 +27,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="sectionTitle">
-                    <h2><span>{{ trans('site.activities') }}</span></h2>
+                    <h2>Activity</h2>
             </div>
         </div>
         <div class="row">

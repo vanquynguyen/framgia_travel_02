@@ -131,7 +131,7 @@
                         @php
                         $choiceSArr = [];
                         foreach ($choices as $choice) {
-                        $choiceSArr[] = $choice->province_id;
+                            $choiceSArr[] = $choice->province_id;
                         }
                         @endphp
                         <select name="proChoice[]" class="form-control select2" id="mySelectBox" multiple required>

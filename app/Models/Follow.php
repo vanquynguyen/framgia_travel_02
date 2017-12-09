@@ -20,4 +20,9 @@ class Follow extends Model
     {
         return $this->belongsTo(User::class, 'following_id');
     }
+
+    public function scopeWhereFollow($query, $follower_id, $following_id)
+    {
+        return $query->Where('follower_id', $follower_id)->Where('following_id', $following_id);
+    }
 }

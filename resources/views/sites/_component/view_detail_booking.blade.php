@@ -1,4 +1,4 @@
-<h3>{{ $booking->plan->title }} <span id="detail_status">{{ trans('site.status') }} : {{ ($booking->status == config('setting.status.inprogress')) ? trans('admin.inprogress') : trans('admin.approved') }}</span></h3>
+<h4>{{ $booking->plan->title }} <span id="detail_status">{{ trans('site.status') }} : {{ ($booking->status == config('setting.status.inprogress')) ? trans('admin.inprogress') : trans('admin.approved') }}</span></h4>
 <div class="form-group">
     {!! Form::label('name_customer', trans('site.name_customer')) !!}
     {!! Form::text('full_name', $booking->full_name, array('class' => 'form-control')) !!}

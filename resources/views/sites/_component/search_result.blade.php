@@ -10,12 +10,20 @@
         @endforeach
     </ul>
     <div class="header_search">
-         <h4><span><i class="fa fa-pencil" aria-hidden="true"></i></span> {{ trans('site.plans') }}</h4>
+         <h4><span><i class="fa fa-calendar" aria-hidden="true"></i></span> {{ trans('site.plans') }}</h4>
     </div>
-    <ul>
+    <ul class="content">
         @foreach($plans as $plan)
             <li>
-                <a href=""><p>{{ $plan->title }}</p></a>
+            <a href="{{ route('user.plan.detail', $plan->id) }}">
+                <div class="plan-search">
+                    @foreach($plan->galleries->keyby('plan_id') as $gallery)
+                        <img src="/images/{{ $gallery->image }}") width="50" height="50">
+                    @endforeach
+                </div>
+                <p style="float: left;">{{ $plan->title }}</p>
+                </a>
+                
             </li>
         @endforeach
     </ul>

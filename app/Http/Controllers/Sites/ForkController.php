@@ -63,7 +63,7 @@ class ForkController extends Controller
     public function showForkPlan($id)
     {
         $user = User::find($id);
-        $number_forks = Fork::where('user_id', '=' , $user->id )->get();
+        $number_forks = Fork::where('user_id', '=' , $user->id)->get();
         $html = view('sites._component.fork_list', compact('number_forks'))->render();
         
         return response($html);

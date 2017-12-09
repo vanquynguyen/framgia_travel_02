@@ -116,7 +116,7 @@ class ProvinceController extends Controller
             $province = Province::findOrFail($request->id);
             if ($request->hasFile('avatar')) {
                 $file_name = Helper::importFile($request->file('avatar'), config('setting.defaultPath'));
-                $data->image = $file_name;
+                $province->image = $file_name;
             }
             $province->name = $request->name;
             $province->description = $request->description;

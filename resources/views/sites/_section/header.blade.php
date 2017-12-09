@@ -23,7 +23,7 @@
                         <a href="{{ route('activity.index') }}">{{ trans('site.activities') }}</a>
                     </li>
                     <li class="dropdown singleDrop ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.guides') }}</a>
+                        <a href="{{ route('show.guide') }}">{{ trans('site.guides') }}</a>
                     </li>
                     @if (Auth::guest())
                         <li class="dropdown singleDrop ">
@@ -34,7 +34,7 @@
                         </li>
                     @else    
                         <li class="dropdown singleDrop ">
-                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.admin') }}</a>
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->full_name }}</a>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li class=""><a href="{{ route('user.dashboard', Auth::user()->id) }}">{{ trans('site.dashboard') }}</a></li>
                                 <li class=""><a href="{{ route('user.profile') }}">{{ trans('site.profile') }}</a></li>
@@ -150,6 +150,30 @@
         </div>
     </div>
 </div>
-@section('script')
-    {{ Html::script('js/search-ajax.js') }}
-@endsection
+{{ Html::script('bowers/jquery/dist/jquery.min.js')}}
+<script type="text/javascript">
+    $(document).ready(function(e) {
+    var timer;
+    $(document).on('keyup', '#search_text', function() {
+        var keyword = $(this).val();
+        if (keyword.length > 0) {
+            timer = setTimeout(function() {
+                $.ajax({
+                    method : 'GET',
+                    url : 'search',
+                    data : {'keyword': keyword},
+                    success : function(response) {
+                        $('#search-result').html(response);
+                        $('#search-result').show();
+                    },
+                });
+            }, 1000);
+        } else {
+            $('#search-result').hide();
+        }
+    });
+});
+$("body").click(function() {
+    $('#search-result').hide();
+});
+</script>

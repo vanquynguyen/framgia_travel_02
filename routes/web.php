@@ -128,4 +128,8 @@ Route::group(['namespace' => 'Sites'], function() {
     Route::get('/schedule/{id}/view', 'ForkController@showForkSchedule')->name('fork.schedule');
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('/search', 'HomeController@searchAjax')->name('search');
+    Route::get('/guide', 'HomeController@showGuide')->name('show.guide');
+    Route::get('/guide/search', 'HomeController@searchGuide')->name('search.guide');
+    Route::get('/user/{id}/follow', 'FollowController@follow')->name('user.follow');
+    Route::get('/user/{id}/unfollow', 'FollowController@unfollow')->name('user.unfollow');
 });

@@ -2,6 +2,7 @@
 
 @section('style')
     {{ Html::style('css/plan_detail.css') }}
+    {{ Html::style('bowers/toastr/toastr.css')}}
 @endsection()
 
 @section('content')
@@ -79,32 +80,39 @@
         </div>
     </section>
 <br>
-    <section class="container">
-        <div id="detail-plan">
-            <div clas="detail-content" id="detail-content">
-                <div class="clearfix">
-                    <div class="col-md-4">
-                        <div id="avatar" class="carousel slide" data-ride="carousel">
-                            <!-- Wrapper for slides -->
-                            <div class="carousel-inner">
-                                <div class="item active">
-                                    <img src="{{ asset('images/image/congtroilaichau.jpg') }}" alt="..." >
-                                    <div class="carousel-caption">
-                                    </div>
+<section class="container">
+    <div id="detail-plan">
+        <div clas="detail-content" id="detail-content">
+            <div class="clearfix">
+                <div class="col-md-4">
+                    <div id="avatar" class="carousel slide" data-ride="carousel">
+                         <!-- Wrapper for slides -->
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <img src="/images/{{ $galleryFirst->image }}"/>
+                                <div class="carousel-caption">
                                 </div>
+                            </div> 
+                            @foreach($galleries as $gallery)
                                 <div class="item">
-                                    <img src="{{ asset('images/image/hoabinh1.jpg') }}" alt="..."  >
+                                    <img src="/images/{{ $gallery->image }}"/>
                                     <div class="carousel-caption">
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
-                    <div class="col-md-8">
-                        <h1 class="detail-title">{{ $plan->title }}</h1>
-                        <p class="detail-trip" >
-                            <span>{{ trans('site.itinerary') }}:</span>
-                            <span>
+                </div>  
+                <div class="col-md-8">
+                    <div style="margin-left: 761px">
+                        <form action="{{ route('user.fork', $plan->id) }}" method="get">
+                            <button class="btn buttonTransparent" type="submit">{{ trans('site.fork_plan_now') }}</button>
+                        </form>
+                    </div>
+                    <h1 class="detail-title">{{ $plan->title }}</h1>
+                    <p class="detail-trip" >
+                        <span>{{ trans('site.itinerary') }}:</span>
+                        <span>
                             @foreach($planProvinces as $planProvince)
                             - {{ $planProvince->province->name }}
                             @endforeach
@@ -113,36 +121,59 @@
                         <p>
                             <span class="author">{{ trans('site.author') }}:</span>
                             <span> 
-                            @foreach($getUser as $getUser)
-                            {{ $getUser->user->full_name }}
-                            @endforeach
+                                {{ $getUser->user->full_name }}
                             </span>
                         </p>
                         <div class="rating">
                             <div class="rating-star rating-tour" style="cursor: pointer;">
-                                <div class="star-rating">
-                                    <input class="star" id="star-5" type="radio" name="rate_point" value="5" plan-id="{{ $plan->id }}">
-                                    <label for="star-5" title="5 stars">
-                                    <i class="active fa fa-star" aria-hidden="true"></i>
-                                    </label>
-                                    <input class="star" id="star-4" type="radio" name="rate_point" value="4" plan-id="{{ $plan->id }}">
-                                    <label for="star-4" title="4 stars">
-                                    <i class="active fa fa-star" aria-hidden="true"></i>
-                                    </label>
-                                    <input class="star" id="star-3" type="radio" name="rate_point"" value="3" plan-id="{{ $plan->id }}">
-                                    <label for="star-3" title="3 stars">
-                                    <i class="active fa fa-star" aria-hidden="true"></i>
-                                    </label>
-                                    <input class="star" id="star-2" type="radio" name="rate_point" value="2" plan-id="{{ $plan->id }}">
-                                    <label for="star-2" title="2 stars">
-                                    <i class="active fa fa-star" aria-hidden="true"></i>
-                                    </label>
-                                    <input class="star" id="star-1" type="radio" name="rate_point" value="1" plan-id="{{ $plan->id }}">
-                                    <label for="star-1" title="1 star">
-                                    <i class="active fa fa-star" aria-hidden="true"></i>
-                                    </label>
-                                </div>
-                                <div class="info">{{ $rateAvg }}/5 {{ trans('site.in') }} {{ $rateCount }} {{ trans('site.rating') }}</div>
+                                @if(Auth::check())
+                                    <div class="star-rating">
+                                        <input class="star" id="star-5" type="radio" name="rate_point" value="5" plan-id="{{ $plan->id }}" user-id="{{ Auth::user()->id }}">
+                                        <label for="star-5" title="5 stars">
+                                        <i class="active fa fa-star" aria-hidden="true"></i>
+                                        </label>
+                                        <input class="star" id="star-4" type="radio" name="rate_point" value="4" plan-id="{{ $plan->id }}" user-id="{{ Auth::user()->id }}">
+                                        <label for="star-4" title="4 stars">
+                                        <i class="active fa fa-star" aria-hidden="true"></i>
+                                        </label>
+                                        <input class="star" id="star-3" type="radio" name="rate_point"" value="3" plan-id="{{ $plan->id }}" user-id="{{ Auth::user()->id }}">
+                                        <label for="star-3" title="3 stars">
+                                        <i class="active fa fa-star" aria-hidden="truuser-id="{{ Auth::user()->id }}"></i>
+                                        <input class="star" id="star-2" type="radio" name="rate_point" value="2" plan-id="{{ $plan->id }}" user-id="{{ Auth::user()->id }}">
+                                        <label for="star-2" title="2 stars">
+                                        <i class="active fa fa-star" aria-hidden="true"></i>
+                                        </label>
+                                        <input class="star" id="star-1" type="radio" name="rate_point" value="1" plan-id="{{ $plan->id }}" user-id="{{ Auth::user()->id }}">
+                                        <label for="star-1" title="1 star">
+                                        <i class="active fa fa-star" aria-hidden="true"></i>
+                                        </label>
+                                    </div>
+                                    <div class="info">{{ $rateAvg }}/5 {{ trans('site.in') }} {{ $rateCount }} {{ trans('site.rating') }}</div>
+                                @else
+                                    <div class="star-rating">
+                                        <input class="star" id="star-5" type="radio" name="rate_point" value="5" >
+                                        <label for="star-5" title="5 stars">
+                                        <i class="active fa fa-star" aria-hidden="true"></i>
+                                        </label>
+                                        <input class="star" id="star-4" type="radio" name="rate_point" value="4" >
+                                        <label for="star-4" title="4 stars">
+                                        <i class="active fa fa-star" aria-hidden="true"></i>
+                                        </label>
+                                        <input class="star" id="star-3" type="radio" name="rate_point"" value="3" >
+                                        <label for="star-3" title="3 stars">
+                                        <i class="active fa fa-star" aria-hidden="true"></i>
+                                        <input class="star" id="star-2" type="radio" name="rate_point" >
+                                        <label for="star-2" title="2 stars">
+                                        <i class="active fa fa-star" aria-hidden="true"></i>
+                                        </label>
+                                        <input class="star" id="star-1" type="radio" name="rate_point" value="1" >
+                                        <label for="star-1" title="1 star">
+                                        <i class="active fa fa-star" aria-hidden="true"></i>
+                                        </label>
+                                    </div>
+                                    <div class="info">{{ $rateAvg }}/5 {{ trans('site.in') }} {{ $rateCount }} {{ trans('site.rating') }}</div>
+                                @endif
+                               
                             </div>
                         </div>
                         <div class="detail-content-1">
@@ -163,73 +194,64 @@
                                 <span >{{ trans('site.start_from') }}:</span>
                                 <span class="detail-price">{{ $plan->price }}$</span>
                                 @if($plan->status == config('setting.status.inprogress'))
-                                <p>
-                                    <span>{{ trans('site.status') }}:</span>
-                                    <span>{{ trans('site.inprocess') }}</span>
-                                    <a class="btn buttonTransparent" href="">{{ trans('site.clone') }}</a>
-                                <form action="{{ route('user.fork', $plan->id) }}" method="get">
-                                    <button class="btn buttonTransparent" type="submit">{{ trans('site.fork') }}</button>
-                                </form>
-                                </p>
+                                    <p>
+                                        <span>{{ trans('site.status') }}:</span>
+                                        <span>{{ trans('site.inprocess') }}</span>
+                                        <a class="btn buttonTransparent" href="">{{ trans('site.clone') }}</a>
+                                    <form action="{{ route('user.fork', $plan->id) }}" method="get">
+                                        <button class="btn buttonTransparent" type="submit">{{ trans('site.fork') }}</button>
+                                    </form>
+                                    </p>
                                 @else
-                                <p>
-                                    <span>{{ trans('site.status') }}:</span>
-                                    <span>{{ trans('site.approved') }}</span>
-                                </p>
-                                <p>
-                                    <a class="btn btn-default" href="">{{ trans('site.clone') }}</a>
-                                <form action="{{ route('user.fork', $plan->id) }}" method="get">
-                                    <button class="btn btn-default" type="submit">{{ trans('site.fork') }}</button>
-                                </form>
-                                    <a href="{{ route('user.plan.booking', $plan->id) }}" class="btn buttonTransparent">{{ trans('site.book_now') }}</a>
-                                </p>
+                                    <p style="margin-top: 50px">
+                                        @if(Auth::check())
+                                            <a href='{{ route('user.plan.booking', $plan->id) }}' class="btn buttonTransparent">{{ trans('site.book_now') }}</a>
+                                        @else
+                                            <a class="btn buttonTransparent" id="check_book">{{ trans('site.book_now') }}</a>
+                                        @endif
+                                    </p>
                                 @endif
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="clearfix">
-                    <div class="detail" id="tab-plan">
-                        <ul class="nav nav-tabs" role="tablist" class="active">
-                            <li role="presentation" class="active">
-                                <a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">{{ trans('site.overview') }}</a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#itinerary" aria-controls="itinerary" role="tab" data-toggle="tab">{{ trans('site.itinerary') }}</a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#start_at" aria-controls="start_at" role="tab" data-toggle="tab" >{{ trans('site.start_at') }}</a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#note" aria-controls="note" role="tab" data-toggle="tab" >{{ trans('site.note') }}</a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#comment" aria-controls="comment" role="tab" data-toggle="tab" >{{ trans('site.comment') }}</a>
-                            </li>
-                        </ul>
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="overview">
-                                <p>
-                                    <a href=""></a> - {{ $plan->description }}
-                                </p>
-                                <div align="center">
-                                    <img class="img-thumbnail img-overview" src="{{ asset('images/image/ha1.jpg') }}"/>
-                                </div>
-                                <p class="title-img"><strong></strong></p>
-                                <div align="center">
-                                    <img class="img-thumbnail img-overview" src="{{ asset('images/image/ha2.jpg') }}"/>
-                                </div>
-                                <p class="title-img"><strong></strong></p>
-                                <div align="center">
-                                    <img class="img-thumbnail img-overview" src="{{ asset('images/image/ha3.jpg') }}"/>
-                                </div>
-                                <p class="title-img"><strong></strong></p>
+            </div>
+            <div class="clearfix">
+                <div class="detail" id="tab-plan">
+                    <ul class="nav nav-tabs" role="tablist" class="active">
+                        <li role="presentation" class="active">
+                            <a href="#overview" aria-controls="overview" role="tab" data-toggle="tab" >{{ trans('site.overview') }}</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#itinerary" aria-controls="itinerary" role="tab" data-toggle="tab" >{{ trans('site.itinerary') }}</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#start_at" aria-controls="start_at" role="tab" data-toggle="tab" >{{ trans('site.start_at') }}</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#note" aria-controls="note" role="tab" data-toggle="tab" >{{ trans('site.note') }}</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#comment" aria-controls="comment" role="tab" data-toggle="tab" >{{ trans('site.comment') }}</a>
+                        </li>
+                    </ul>
+                <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="overview">
+                            <p>
+                                <a href=""></a> - {{ $plan->description }}
+                            </p>
+                            @foreach($galleries as $gallery)   
+                            <p class="title-img"><strong>{{ $gallery->image_name }}</strong></p>
+                            <div align="center">
+                                <img class="img-thumbnail img-overview" src="/images/{{ $gallery->image }}"/>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="itinerary">
-                                <div id="framgia-schedule" class="tab-pane fade in  clearfix active">
-                                    <ul >
-                                        @foreach($schedules as $schedule)
+                            @endforeach()
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="itinerary">
+                            <div id="framgia-schedule" class="tab-pane fade in  clearfix active">
+                                <ul >
+                                    @foreach($schedules as $schedule)
                                         <li class="clearfix">
                                             <div class="framgia-rl">
                                                 <p class="date-schedule">
@@ -258,59 +280,59 @@
                             </div>
                             <div role="tabpanel" class="tab-pane" id="comment">
                                 @if(Auth::check())
-                                <form action="" id="comment-form" method="post" enctype="multipart/form-data">
-                                    {{ csrf_field() }}
-                                    <input type="text" name="plan_id" id="plan_id" value="{{ $plan->id }}" data-id="{{ $plan->id }}" hidden>
-                                    <textarea name="content" class="form-control text-comment"></textarea>
-                                    <button type="submit" class="btn buttonTransparent btn-comment">
-                                    {{ trans('site.comment') }}
-                                    </button>
-                                </form>
+                                    <form action="" id="comment-form" method="post" enctype="multipart/form-data">
+                                        {{ csrf_field() }}
+                                        <input type="text" name="plan_id" id="plan_id" value="{{ $plan->id }}" data-id="{{ $plan->id }}" hidden>
+                                        <textarea name="content" class="form-control text-comment"></textarea>
+                                        <button type="submit" class="btn buttonTransparent btn-comment">
+                                        {{ trans('site.comment') }}
+                                        </button>
+                                    </form>
+                                @else 
+                                    <p style="color: red">{{ trans('site.comment_login') }}</p>
+                                @endif    
                                 <div class="show-comment"></div>
                                 @foreach($comments as $comment)
-                                <div class="comment-content">
-                                    <div class="col-md-8">
-                                        <header class="comment-header">
-                                            <p class="comment-author">
-                                                <img src="{{ $comment->user->avatar }}" class="img-circle img-comment">
-                                            </p>
-                                            <p>
-                                                <a href="">{{ $comment->user->full_name }}</a><span> {{ trans('site.say') }}:</span>
-                                            </p>
-                                            <p>
-                                                {{ $comment->created_at }}
-                                            </p>
-                                            <p class="framgia-content">{{ $comment->content }}</p>
-                                        </header>
-                                    </div>
-                                    <div class="col-md-4">
-                                        @if(Auth::user()->id == $comment->user_id)
-                                        <div class="dropdown manage-comment">
-                                            <span class="dropdown-toggle manage-dropdown" data-toggle="dropdown">...</span>
-                                            <ul class="dropdown-menu manage-menu">
-                                                <li class="edit">
-                                                    <button type="submit" class="btn edit-comment btn-manage" plan-id="{{ $plan->id }}" data="{{ $comment->id }}" value="{{ $comment->content }}">
-                                                    <i class="fa fa-pencil"></i> 
-                                                    {{ trans('site.edit') }}...
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <form class="delete" action="" method="post" data-id="{{ $comment->id }}"> 
-                                                        {{ csrf_field() }}
-                                                        <button type="submit" class="btn delete btn-manage">
-                                                        <i class="fa fa-trash-o" aria-hidden="true"></i> {{ trans('site.delete') }}...
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            </ul>
+                                    <div class="comment-content">
+                                        <div class="col-md-8">
+                                            <header class="comment-header">
+                                                <p class="comment-author">
+                                                    <img src="{{ $comment->user->avatar }}" class="img-circle img-comment">
+                                                </p>
+                                                <p>
+                                                    <a href="">{{ $comment->user->full_name }}</a><span> {{ trans('site.say') }}:</span>
+                                                </p>
+                                                <p>
+                                                    {{ $comment->created_at }}
+                                                </p>
+                                                <p class="framgia-content">{{ $comment->content }}</p>
+                                            </header>
                                         </div>
-                                        @endif
+                                        <div class="col-md-4">
+                                            @if(Auth::check() && Auth::user()->id == $comment->user_id)
+                                                <div class="dropdown manage-comment">
+                                                    <span class="dropdown-toggle manage-dropdown" data-toggle="dropdown">...</span>
+                                                    <ul class="dropdown-menu manage-menu">
+                                                        <li class="edit">
+                                                            <button type="submit" class="btn edit-comment btn-manage" plan-id="{{ $plan->id }}" data="{{ $comment->id }}" value="{{ $comment->content }}">
+                                                            <i class="fa fa-pencil"></i> 
+                                                            {{ trans('site.edit') }}...
+                                                            </button>
+                                                        </li>
+                                                        <li>
+                                                            <form class="delete" action="" method="post" data-id="{{ $comment->id }}"> 
+                                                                {{ csrf_field() }}
+                                                                <button type="submit" class="btn delete btn-manage">
+                                                                <i class="fa fa-trash-o" aria-hidden="true"></i> {{ trans('site.delete') }}...
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
                                 @endforeach
-                                @else
-                                <p>{{ trans('site.login') }}</p>
-                                @endif
                             </div>
                         </div>
                     </div>
@@ -320,44 +342,28 @@
         </div>
         <br>
         <div class="framgia-title-type-2 clearfix">
-            <h2><span class="framgia-title-lb"></span></h2>
+            <h2><span class="framgia-title-lb">{{ trans('site.new_plans') }}</span></h2>
             <p class="framgia-line"></p>
         </div>
         <div class="clearfix more-plan">
-            <hr>
             <div class="col-xs-12">
                 <div class="relatedProduct">
                     <div class="clearfix">
-                        <div class="col-sm-4 col-xs-12">
-                            <div class="relatedItem">
-                                <img src="{{ asset('images/image/hoatroi.jpg') }}">
-                                <div class="maskingInfo">
-                                    <h4></h4>
-                                    <p></p>
-                                    <a href="#" class="btn buttonTransparent">{{ trans('site.viewmore') }}</a>
+                        @foreach($planNews as $planNew)
+                            @php
+                                $gallery = $plan->galleries->random(1)->first();
+                            @endphp
+                            <div class="col-sm-4 col-xs-12">
+                                <div class="relatedItem">
+                                    <img src="/images/{{ $gallery->image }}" alt="deal-image">
+                                    <div class="maskingInfo">
+                                        <h4>{{ $planNew->title }}</h4>
+                                        <h1>$ {{ $planNew->price }}</h1>
+                                        <a href="{{ route('user.plan.detail', $plan->id) }}" class="btn buttonTransparent">{{ trans('site.viewmore') }}</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-4 col-xs-12">
-                            <div class="relatedItem">
-                                <img src="{{ asset('images/image/tam-suoi.jpg') }}">
-                                <div class="maskingInfo">
-                                    <h4></h4>
-                                    <p></p>
-                                    <a href="#" class="btn buttonTransparent">{{ trans('site.viewmore') }}</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4 col-xs-12">
-                            <div class="relatedItem">
-                                <img src="{{ asset('images/image/thactinhyeu.jpg') }}">
-                                <div class="maskingInfo">
-                                    <h4></h4>
-                                    <p></p>
-                                    <a href="#" class="btn buttonTransparent">{{ trans('site.viewmore') }}</a>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -373,7 +379,7 @@
                 <div class="item-slide">
                     <div class="item-slide-content">
                         <a href=""><img src="{{ asset('images/image/congtroilaichau.jpg') }}"/></a>
-                        <h2></h2>
+                        <h2></h2>   
                         <a href="">{{ trans('site.viewmore') }} &nbsp;<i class="fa fa-arclearfix-right"></i></a>
                     </div>
                 </div>
@@ -381,7 +387,7 @@
                     <div class="item-slide-content">
                         <a href=""><img src="{{ asset('images/image/hoabinh1.jpg') }}"/></a>
                         <h2></h2>
-                        <a href="">X{{ trans('site.viewmore') }} &nbsp;<i class="fa fa-arclearfix-right"></i></a>
+                        <a href="">{{ trans('site.viewmore') }} &nbsp;<i class="fa fa-arclearfix-right"></i></a>
                     </div>
                 </div>
                 <div class="item-slide">
@@ -412,8 +418,8 @@
                 <div class="item-slide">
                     <div class="item-slide-content">
                         <a href=""><img src="{{ asset('images/image/test3.jpg') }}"/></a>
-                        <h2>
-                        </i></a>
+                        <h2></h2>
+                        <a href="">{{ trans('site.viewmore') }} &nbsp;<i class="fa fa-arclearfix-right"></i></a>
                     </div>
                 </div>
                 <div class="carousel-caption">
@@ -427,4 +433,6 @@
     {{ Html::script('js/comment.js') }}  
     {{ Html::script('js/delete-comment.js') }}  
     {{ Html::script('js/rate.js') }}  
+    {{ Html::script('bowers/toastr/toastr.js') }} 
+    {{ Html::script('js/index.js') }}
 @endsection

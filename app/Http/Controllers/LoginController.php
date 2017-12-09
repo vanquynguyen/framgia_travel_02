@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\LoginForm;
 use App\Http\Requests\RegisterForm;
 use App\Models\User;
+use App\Helpers\helper;
 use Hash;
 
 class LoginController extends Controller
@@ -25,7 +26,7 @@ class LoginController extends Controller
         return redirect('/');
     }
 
-    public function register(RegisterForm $request)
+    public function register(Request $request)
     {
         try {
             $user = $request->all();
@@ -34,12 +35,14 @@ class LoginController extends Controller
             $password = Hash::make($user['password']);
             $gender = $user['gender'];
             $level = config('setting.user');
+            $filename = helper::upload($request->file('avatar'), config('setting.defaultPath'));
             $insert = array(
                 'full_name' => $full_name,
                 'email' => $email,
                 'password' => $password,
                 'gender' => $gender,
                 'level' => $level,
+                'avatar' => $filename,
             );
             $objuser = new User();
             $objuser->insert($insert);
@@ -57,10 +60,10 @@ class LoginController extends Controller
             if (Auth::user()->level == config('setting.admin')) {
                 return redirect('admin');
             } else {
-                return redirect('/');
+                return redirect(route('user.dashboard', Auth::user()->id));
             }
         }
 
-        return redirect('/')->with($error);
+        return redirect('/');
     }
 }

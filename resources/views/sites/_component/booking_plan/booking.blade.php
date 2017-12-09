@@ -186,7 +186,7 @@
                                 <div class="row">
                                     <div class="form-group col-sm-12 col-xs-12">
                                         <label for="">{{ trans('site.full_name') }}</label>
-                                        <input type="text" class="form-control" name="full_name_guest" id="full_name_guest">
+                                        <input type="text" class="form-control" name="full_name_guest[]" id="full_name_guest">
                                     </div>
                                     <div class="form-group col-sm-6 col-xs-12">
                                         <label for="">{{ trans('site.gender') }}</label>
@@ -232,7 +232,6 @@
                                     </ul>
                                 </div>
                             </div>
-                        
                         </div>
                     </div>
                 </div>

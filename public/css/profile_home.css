@@ -352,13 +352,14 @@ ul.user-header-menu li > a:hover > span {
 }
 
 .content-plan {
-    margin-right: 100px;
+   /* margin-right: 100px;*/
+   margin-left: 10px;
 }
 
 .tile {
     border: transparent;
     border-radius: 20px;
-    width: 290px;
+    width: 240px;
     height: 300px;
     margin: 10px;
     background-color: rgba(0, 0, 0, 0.7);
@@ -371,7 +372,8 @@ ul.user-header-menu li > a:hover > span {
     overflow: hidden;
     color: white;
     font-family: 'Roboto';
-
+    margin-bottom: 100px;
+    margin-right: 100px
 }
 
 .tile img {
@@ -443,9 +445,11 @@ ul.user-header-menu li > a:hover > span {
 }
 
 .title-plan {
+    height: 60px;
+    width: 70%;
+    font-weight: bold;
     font-style: italic;
     color: black;
-    width: 300px;
 }
 
 .title-plan:hover {
@@ -459,7 +463,7 @@ ul.user-header-menu li > a:hover > span {
 
 .create-schedule {
     margin-top: 254px;
-    margin-left: 78px;
+    margin-left: 50px;
     font-size: 21px;
     color: orange;
 }
@@ -514,6 +518,17 @@ ul.user-header-menu li > a:hover > span {
 #detail_status {
     margin-left: 300px;
 }
-#view_fork {
-    margin-left: 120px;
+
+#plan-detail {
+    float: left;
+    margin-left: 50px
+}
+
+#title {
+    width: 243px;
+    margin-left: 67px;
+}
+
+#table-plan {
+    margin-left: 17px;
 }

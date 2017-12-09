@@ -4,6 +4,7 @@
     {{ Html::style('css/profile_home.css') }}
     {{ Html::style('bowers/select2/dist/css/select2.min.css') }}
     {{ Html::style('/bowers/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}
+    {{ Html::style('bowers/toastr/toastr.css')}}
 @endsection
 
 @section('script')
@@ -11,7 +12,9 @@
     {{ Html::script('/bowers/moment/min/moment.min.js') }}
     {{ Html::script('/bowers/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}
     {{ Html::script('js/list_fork.js') }}
-    {{ Html::script('js/dashboard.js') }}
+    {{ Html::script('js/dashboard.js') }} 
+    {{ Html::script('js/follow.js') }}
+    {{ Html::script('bowers/toastr/toastr.js') }}   
 @endsection
 
 @section('content')
@@ -24,23 +27,23 @@
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown singleDrop">
+                    <li class="dropdown singleDrop active ">
                         <a href="{{ route('home') }}">{{ trans('site.home') }}</a>
                     </li>
                     <li class="dropdown megaDropMenu ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="300" data-close-others="true" aria-expanded="false">{{ trans('site.provinces') }}</a>
+                        <a href="{{ route('province.index') }}">{{ trans('site.provinces') }}</a>
+                    </li>
+                    <li class="dropdown megaDropMenu ">
+                        <a href="{{ route('hotel.index') }}">{{ trans('site.hotels') }}</a>
+                    </li>
+                    <li class="dropdown megaDropMenu ">
+                        <a href="{{ route('restaurant.index') }}">{{ trans('site.restaurants') }}</a>
+                    </li>
+                    <li class="dropdown megaDropMenu ">
+                        <a href="{{ route('activity.index') }}">{{ trans('site.activities') }}</a>
                     </li>
                     <li class="dropdown singleDrop ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.hotels') }}</a>
-                    </li>
-                    <li class="dropdown singleDrop ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.restaurants') }}</a>
-                    </li>
-                    <li class="dropdown singleDrop ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.activities') }}</a>
-                    </li>
-                    <li class="dropdown singleDrop ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.guides') }}</a>
+                        <a href="{{ route('show.guide') }}">{{ trans('site.guides') }}</a>
                     </li>
                     @if (Auth::guest())
                         <li class="dropdown singleDrop ">
@@ -51,9 +54,9 @@
                         </li>
                     @else    
                         <li class="dropdown singleDrop active">
-                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.admin') }}</a>
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->full_name }}</a>
                             <ul class="dropdown-menu dropdown-menu-right">
-                                <li class=""><a href="#">{{ trans('site.dashboard') }}</a></li>
+                                <li class=""><a href="{{ route('user.dashboard', Auth::user()->id) }}">{{ trans('site.dashboard') }}</a></li>
                                 <li class=""><a href="{{ route('user.profile') }}">{{ trans('site.profile') }}</a></li>
                                 <li class=""><a href="{{ route('user.plan') }}">{{ trans('site.add_plan') }}</a></li>
                                 <li class=""><a href="{{ route('user.request') }}">{{ trans('site.request_services') }}</a></li>
@@ -132,9 +135,15 @@
                                         <div class="heading clearfix">
                                             <h3>{{ $user->full_name }}</h3>
                                             @if($user->level == 2)
-                                                <span class="label label-info"><i class="fa fa-trophy mr-3"></i> Certified Guide</span>
+                                                <span class="label label-info">
+                                                    <i class="fa fa-check mr-3"></i> 
+                                                    Verified
+                                                </span>
                                             @else
-                                                <span class="label label-success"><i class="fa fa-check mr-3"></i> Verified</span>    
+                                                <span class="label label-success">
+                                                    <i class="fa fa-trophy mr-3"></i> 
+                                                    Guest
+                                                </span>    
                                             @endif
                                         </div>
                                         <ul class="user-meta">
@@ -146,18 +155,15 @@
                                                     <a href="#"><i class="fa fa-rss" aria-hidden="true" title="rss"></i></a>
                                                     <a href="#"><i class="fa fa-vimeo" aria-hidden="true" title="vimeo"></i></a>
                                                 </div>
-                                                @if($user->id == Auth::user()->id)
-                                                @else
-                                                    @foreach($userFollowers as $q)
-                                                        @if($q->following_id == Auth::user()->id)
-                                                            <a href="#" class="btn btn-xs btn-border"><span>{{ trans('site.unfollow') }}</span></a>
-                                                            @break
+                                                <div id="follow-result">
+                                                    @if(Auth::user()->id != $user->id)
+                                                        @if($checkFollow)
+                                                            <button type="button" class="btn btn-xs btn-border" userId="{{ $user->id }}" id="unfollow"><span>{{ trans('site.unfollow') }}</span></button>
                                                         @else
-                                                           <a href="#" class="btn btn-xs btn-border"><span>{{ trans('site.follow') }}</span></a>
-                                                            @break
+                                                            <button type="button" class="btn btn-xs btn-border" userId="{{ $user->id }}" id="follow"><span>{{ trans('site.follow') }}</span></button>
                                                         @endif
-                                                    @endforeach
-                                                @endif
+                                                    @endif
+                                                </div>
                                             </li>
                                             <li>
                                             </li>
@@ -171,11 +177,12 @@
                     </div>
                 </div>
             </div>
+            @if($user->id == Auth::user()->id)
             <div class="content-bottom">
                 <div class="container">
                     <div class="inner-bottom">
                         <ul class="user-header-menu">
-                            @if($user->id == Auth::user()->id)
+                           
                                 <li><a href="{{ route('user.profile') }}">{{ trans('site.profile') }}</a></li>
                                 <li><a href="{{ route('user.dashboard', Auth::user()->id) }}">{{ trans('site.plans') }} <span>{{ $numberPlan }}</span></a></li>
                                 <li><a href="" id="show-gallery">{{ trans('site.gallery') }}</a></li>
@@ -202,122 +209,73 @@
             </div>
         </div>
         <div class="col-md-9 .col-md-push-3" id="show_info">
-            <h4 class="h4-plan">{{ trans('site.my_plans') }}</h4>
+            <h4 class="h4-plan"><i class="fa fa-calendar" aria-hidden="true"></i> {{ trans('site.my_plans') }}</h4>
             @if($user->id == Auth::user()->id)
                 <a href="{{ route('user.plan') }}"><i class="fa fa-plus-circle" aria-hidden="true"></i><span> {{ trans('site.add_plan') }}</span></a>
             @endif
-            <h3>{{ trans('site.you_have') }} {{ count($plans) }} {{ trans('admin.plans') }}</h3>
+            <hr>
             @foreach($plans as $plan)
                 @if(count($plans))
-                    <a href="" class="content-plan">
-                        <h5 class="title-plan">{{ $plan->title }}</h5>
-                        <div class="tile">
-                            <h1 class="del-plan">
-                                <i class="fa fa-times-circle" aria-hidden="true"></i>
-                            </h1>
-                            <img src="{{ asset('images/avatar.png') }}">
-                            <div class="text">
-                                <h5 class="animate-text">
-                                    {{ trans('site.start_at') }}:
-                                    {{ $plan->start_at }}
-                                    <br>
-                                    {{ trans('site.end_at') }}:
-                                    {{ $plan->end_at }}
-                                </h5>
-                                @foreach($plan->planProvinces as $choice)
-                                    <h5 class="animate-text">
-                                        <i class="fa fa-hand-o-right"></i>
-                                        {{ $choice->province->name }}
-                                    </h5>
+                    <div id="plan-detail">
+                        <table id="table-plan">
+                            <tr>
+                                <td>
+                                    <span>{{ trans('site.fork') }}</span>
+                                </td>
+                                <td>
+                                    <a class="fa fa-eye" aria-hidden="true" id="view_fork" data-toggle="modal" data-target="#view_list_fork" data-id="{{ $plan->id }}"> &nbsp;  {{ count($plan->forks) }}
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>{{ trans('site.booking') }}</span></td>
+                                <td><a class="fa fa-eye" aria-hidden="true" id="view_booking" data-toggle="modal" data-target="#view_list_booking" data-id="{{ $plan->id }}"> &nbsp;  {{ count($plan->bookings) }}
+                            </a></td>
+                            </tr>
+                            <tr>
+                                <td>{{ trans('site.status') }}</td> 
+                                <td>
+                                    <span>{{ ($plan->status == config('setting.status.inprogress')) ? trans('admin.inprogress') : trans('admin.approved') }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                        <div>
+                            <a href="{{ route('user.schedule', $plan->id) }}" class="content-plan">
+                                <h5 class="title-plan">{{ $plan->title }}</h5>
+                                <div class="tile">
+                                    <h1 class="del-plan">
+                                        <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                    </h1>
+                                @foreach($plan->galleries as $gallery)
+                                    <img src="/images/{{ $gallery->image }}")>
                                 @endforeach
-                            </div>
-                            <div class="create-schedule">{{ trans('site.create_schedule') }}</div>
+                                    <div class="text">
+                                        <h5 class="animate-text">
+                                            {{ trans('site.start_at') }}:
+                                            {{ $plan->start_at }}
+                                            <br>
+                                            {{ trans('site.end_at') }}:
+                                            {{ $plan->end_at }}
+                                        </h5>
+                                        @php
+                                            $choices = $plan->planProvinces->keyby('province_id');
+                                        @endphp
+                                        @foreach($choices as $choice)
+                                            <h5 class="animate-text">
+                                                <i class="fa fa-hand-o-right"></i>
+                                                {{ $choice->province->name }}
+                                            </h5>
+                                        @endforeach
+                                    </div>
+                                    <div class="create-schedule">{{ trans('site.create_schedule') }}</div>
+                                </div>
+                            </a>
                         </div>
-                    </a>
-                    <div>
-                        <span class="title-plan">{{ trans('site.fork') }}</span>
-                        <a class="fa fa-eye" aria-hidden="true" id="view_fork" data-toggle="modal" data-target="#view_list_fork" data-id="{{ $plan->id }}"> &nbsp;  {{ count($plan->forks) }}
-                        </a>
-                        <h5 class="title-plan">{{ trans('site.status') }} &nbsp; <span>{{ ($plan->status == config('setting.status.inprogress')) ? trans('admin.inprogress') : trans('admin.approved') }}</span></h5>
-                        <span class="title-plan">{{ trans('site.booking') }}</span>
-                        <a class="fa fa-eye" aria-hidden="true" id="view_booking" data-toggle="modal" data-target="#view_list_booking" data-id="{{ $plan->id }}"> &nbsp;  {{ count($plan->bookings) }}
-                        </a>
                     </div>
                 @endif
             @endforeach
         </div>
-    </div>
-</div>
-{{-- list book --}}
-<div class="modal fade" id="view_list_booking" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ trans('site.close') }}</span></button>
-                <h4 class="modal-title" id="myModalLabel">{{ trans('site.list_fork') }}</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                @foreach($plans as $plan)
-                    @foreach($plan->bookings as $booking)
-                    <div class="form-group">
-                        <label for="label" class="control-label">{{ $loop->iteration }}</label>
-                            <div>
-                                {!! Form::text('full_name', $booking->user->full_name, array('class' => 'form-control')) !!}
-                            </div> 
-                        </div>
-                    @endforeach
-                @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- list book --}}
-<div class="modal fade" id="view_list_booking" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ trans('site.close') }}</span></button>
-                <h4 class="modal-title" id="myModalLabel">{{ trans('site.list_fork') }}</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                @foreach($plans as $plan)
-                    @foreach($plan->bookings as $booking)
-                    <div class="form-group">
-                        <label for="label" class="control-label">{{ $loop->iteration }}</label>
-                            <div>
-                                {!! Form::text('full_name', $booking->user->full_name, array('class' => 'form-control')) !!}
-                            </div> 
-                        </div>
-                    @endforeach
-                @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{{-- List fork --}}
-<div class="modal fade" id="view_list_fork" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ trans('site.close') }}</span></button>
-                <h4 class="modal-title" id="myModalLabel">{{ trans('site.list_fork') }}</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                @foreach($plan->forks as $c)
-                    <label class="col-md-3">{{ $loop->iteration }}</label>
-                    <div class="col-md-9">
-                        <input type="text" name="" class="form-control" value="{{ $c->user->full_name }}">
-                    </div>
-                @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
+    </div>  
 </div>
 <!-- Followings -->
 <div class="modal fade" id="following" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -334,7 +292,6 @@
                         <a href="{{ route('user.dashboard', ['id' => $follower->followingUser->id]) }}">
                             {{ $follower->followingUser->full_name }}
                         </a>
-                        <a href="#" id="btn-unfollow" class="btn btn-xs btn-border"><span>{{ trans('site.unfollow') }}</span></a>
                    </div>
                 @endforeach
             </div>
@@ -356,12 +313,7 @@
                         <a href="{{ route('user.dashboard', ['id' => $following->followerUser->id]) }}">
                             {{ $following->followerUser->full_name }}
                         </a>
-                        @foreach($userFollowers as $follower)
-                            @if($following->followerUser->id == $follower->following_id)
-                                <a href="#" id="btn-unfollow" class="btn btn-xs btn-border"><span>{{ trans('site.unfollow') }}</span></a>
-                            @endif
-                        @endforeach
-                    </div>
+                    </div>  
                 @endforeach
             </div>
         </div>

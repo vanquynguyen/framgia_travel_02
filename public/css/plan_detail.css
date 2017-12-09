@@ -8,7 +8,7 @@ ul li {
     min-width: 1024px;
 }
 
-#detail-content {
+#detail-plan {
     border: 1px solid #ddd !important;
     padding: 10px 20px;
 }
@@ -70,7 +70,7 @@ ul li {
 
  #tab-plan {
     margin-left: 16px;
-    margin-right: 10px;
+    margin-right: 9px;
 }
 
 #tab-plan ul a {
@@ -283,6 +283,8 @@ ul li {
 .info {
     float: left;
     margin-top: 20px;
+    font-weight: bold;
+    font-size: 20px;
 }
 
 .star-rating {
@@ -309,4 +311,23 @@ ul li {
 .star-rating label:hover ~ label,
 .star-rating input[type=radio]:checked ~ label {
     color: #f2b600
+}
+
+.photo-wrapper {
+    padding-top: 15px;
+    width: 100%;
+}
+
+.photo {
+    width: 100%;
+    height: 100%;
+}
+
+.maskingInfo h1 {
+    color: orange !important;
+}
+
+.more-plan {
+    width: 80% !important;
+    margin: 0 auto !important;
 }

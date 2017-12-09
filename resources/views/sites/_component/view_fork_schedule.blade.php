@@ -148,9 +148,9 @@
                     </div>
                 </div>
                 <div>
-                    <h5><b>{{ trans('site.description') }}</b> <i class="fa fa-pencil" aria-hidden="true"></i>
+                    <h5><b>{{ trans('site.title') }}</b> <i class="fa fa-pencil" aria-hidden="true"></i>
                     </h5>
-                    <textarea class="form-control" name="description" disabled="">{{ $fork->plan->description }}</textarea>
+                    <textarea class="form-control" name="description" disabled="">{{ $fork->plan->title }}</textarea>
                 </div>
                 <br>
                 <div>

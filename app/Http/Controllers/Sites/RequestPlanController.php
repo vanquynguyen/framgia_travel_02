@@ -14,6 +14,7 @@ use App\Models\PlanProvince;
 use App\Models\Schedule;
 use App\Models\Comment;
 use App\Models\Rate;
+use App\Models\Gallery;
 
 class RequestPlanController extends Controller
 {
@@ -87,6 +88,9 @@ class RequestPlanController extends Controller
         $rates->average =$rates->avg('rate_point');
         $rateAvg = number_format($rates->average, 1, ',', ' ');
         $rateCount = count($rates);
+        $galleries = Gallery::Where('plan_id', $id)->get();
+        $galleryFirst = Gallery::Where('plan_id', $id)->first();
+        $planNews = Plan::newPlan()->paginate(3);
 
         return view('sites._component.plan_detail', compact(
             'plan',
@@ -96,7 +100,11 @@ class RequestPlanController extends Controller
             'getUser',
             'comments',
             'rateAvg',
-            'rateCount'
+            'rateCount',
+            'galleryFirst',
+            'galleryLast',
+            'galleries',
+            'planNews'
         ));
     }
 
