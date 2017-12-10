@@ -8,3 +8,5 @@
     </select>
 </div>
 <div class="img-detail"></div>
+
+ 

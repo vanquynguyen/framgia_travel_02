@@ -40,4 +40,14 @@ class Booking extends Model
     {
         return $query->orderBy('created_at', 'asc')->Where('user_id', $value1)->Where('plan_id', $value2);
     }
+
+    public function scopeTopBooking($query)
+    {
+        return $query->with('plan.galleries')
+            ->get()
+            ->keyby('plan_id')
+            ->sortByDesc(function ($booking) {
+                return $booking->plan->count();
+            })->take(3);
+    }
 }

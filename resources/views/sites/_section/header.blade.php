@@ -23,7 +23,7 @@
                         <a href="{{ route('activity.index') }}">{{ trans('site.activities') }}</a>
                     </li>
                     <li class="dropdown singleDrop ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.guides') }}</a>
+                        <a href="{{ route('show.guide') }}">{{ trans('site.guides') }}</a>
                     </li>
                     @if (Auth::guest())
                         <li class="dropdown singleDrop ">
@@ -34,13 +34,12 @@
                         </li>
                     @else    
                         <li class="dropdown singleDrop ">
-                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.admin') }}</a>
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->full_name }}</a>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li class=""><a href="{{ route('user.dashboard', Auth::user()->id) }}">{{ trans('site.dashboard') }}</a></li>
                                 <li class=""><a href="{{ route('user.profile') }}">{{ trans('site.profile') }}</a></li>
                                 <li class=""><a href="{{ route('user.plan') }}">{{ trans('site.add_plan') }}</a></li>
                                 <li class=""><a href="{{ route('user.request') }}">{{ trans('site.request_services') }}</a></li>
-                                <li class=""><a href="#">{{ trans('site.booking') }}</a></li>
                                 <li class="">
                                     <a href="{{ route('logout') }}">
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST">

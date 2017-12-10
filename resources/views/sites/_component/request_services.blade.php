@@ -14,23 +14,23 @@
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown singleDrop">
+                    <li class="dropdown singleDrop active ">
                         <a href="{{ route('home') }}">{{ trans('site.home') }}</a>
                     </li>
                     <li class="dropdown megaDropMenu ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="300" data-close-others="true" aria-expanded="false">{{ trans('site.provinces') }}</a>
+                        <a href="{{ route('province.index') }}">{{ trans('site.provinces') }}</a>
+                    </li>
+                    <li class="dropdown megaDropMenu ">
+                        <a href="{{ route('hotel.index') }}">{{ trans('site.hotels') }}</a>
+                    </li>
+                    <li class="dropdown megaDropMenu ">
+                        <a href="{{ route('restaurant.index') }}">{{ trans('site.restaurants') }}</a>
+                    </li>
+                    <li class="dropdown megaDropMenu ">
+                        <a href="{{ route('activity.index') }}">{{ trans('site.activities') }}</a>
                     </li>
                     <li class="dropdown singleDrop ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.hotels') }}</a>
-                    </li>
-                    <li class="dropdown singleDrop ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.restaurants') }}</a>
-                    </li>
-                    <li class="dropdown singleDrop ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.activities') }}</a>
-                    </li>
-                    <li class="dropdown singleDrop ">
-                        <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.guides') }}</a>
+                        <a href="{{ route('show.guide') }}">{{ trans('site.guides') }}</a>
                     </li>
                     @if (Auth::guest())
                         <li class="dropdown singleDrop ">
@@ -41,13 +41,12 @@
                         </li>
                     @else    
                         <li class="dropdown singleDrop active">
-                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ trans('site.admin') }}</a>
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->full_name }}</a>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li class=""><a href="{{ route('user.dashboard', Auth::user()->id) }}">{{ trans('site.dashboard') }}</a></li>
                                 <li class=""><a href="{{ route('user.profile') }}">{{ trans('site.profile') }}</a></li>
                                 <li class=""><a href="{{ route('user.plan') }}">{{ trans('site.add_plan') }}</a></li>
-                                <li class=""><a href="#">{{ trans('site.request_services') }}</a></li>
-                                <li class=""><a href="#">{{ trans('site.booking') }}</a></li>
+                                <li class=""><a href="{{ route('user.request') }}">{{ trans('site.request_services') }}</a></li>
                                 <li class="">
                                     <a href="{{ route('logout') }}">
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST">
@@ -179,7 +178,7 @@
             <div class="form-group" id="opentime">
                 <label>{{ trans('site.open_time') }}</label> &nbsp;
                 <i class="fa fa-clock-o"></i>
-                <input type="date" name="open_time" required class="form-control form-date" placeholder="DD/MM/YY">
+                <input type="text" name="open_time" required class="form-control form-date datepicker" placeholder="DD/MM/YY">
             </div>
             <div class="form-group">
                 <div class="checkbox">

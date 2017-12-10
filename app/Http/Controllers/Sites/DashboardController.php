@@ -23,14 +23,15 @@ class DashboardController extends Controller
     public function show($id)
     {
         try {
-            $userFollowings = User::whereFollowing($id)->followingUsers;
+            $userFollowings = User::whereFollowing($id)->followingUsers->keyby('follower');
             $userFollowers = User::whereFollower($id)->followerUsers;
             $following = count($userFollowers);
             $follower = count($userFollowings);
             $user = User::find($id);
             $numberPlans = Plan::whereUser($user->id)->get();
-            $plans = Plan::whereUser($user->id)->paginate(4);
+            $plans = Plan::OrderBy('created_at', 'desc')->whereUser($user->id)->with('galleries')->paginate(4);
             $numberPlan = count($numberPlans);
+            $checkFollow = Follow::where('following_id', $id)->where('follower_id', Auth::user()->id)->first();
 
             return view('sites._component.dashboard', compact(
                 'plans',
@@ -40,7 +41,8 @@ class DashboardController extends Controller
                 'follower',
                 'user',
                 'userFollowings',
-                'userFollowers'
+                'userFollowers',
+                'checkFollow'
             ));
         } catch (Exception $e) {
             $response['error'] = true;

@@ -37,3 +37,7 @@ function out(event) {
 function showImage(){
     $('#image_update').toggle();
 }
+
+$('.datepicker').datepicker({
+    format: 'yyyy-mm-dd'
+});

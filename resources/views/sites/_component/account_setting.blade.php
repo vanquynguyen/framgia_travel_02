@@ -47,7 +47,6 @@
                                 <li class=""><a href="{{ route('user.profile') }}">{{ trans('site.profile') }}</a></li>
                                 <li class=""><a href="#">{{ trans('site.add_plan') }}</a></li>
                                 <li class=""><a href="#">{{ trans('site.request_services') }}</a></li>
-                                <li class=""><a href="#">{{ trans('site.booking') }}</a></li>
                                 <li class="">
                                     <a href="{{ route('logout') }}">
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST">
@@ -94,9 +93,9 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav dashboardNavLeft">
-                    <li><a href="dashboard.html"><i class="fa fa-tachometer" aria-hidden="true"></i>{{ trans('site.dashboard') }}</a></li>
+                    <li><a href="{{ route('user.dashboard', Auth::user()->id) }}"><i class="fa fa-tachometer" aria-hidden="true"></i>{{ trans('site.dashboard') }}</a></li>
                     <li><a href="{{ route('user.profile') }}"><i class="fa fa-user" aria-hidden="true"></i>{{ trans('site.profile') }}</a></li>
-                    <li><a href="booking.html"><i class="fa fa-cube" aria-hidden="true"></i>{{ trans('site.booking') }}</a></li>
+                    <li><a href=""><i class="fa fa-cube" aria-hidden="true"></i>{{ trans('site.booking') }}</a></li>
                     <li><a class="active" href="{{ route('user.setting') }}"><i class="fa fa-cogs" aria-hidden="true"></i>{{ trans('site.setting') }}</a></li>
                 </ul>
             </div>

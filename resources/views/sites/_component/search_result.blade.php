@@ -10,12 +10,12 @@
         @endforeach
     </ul>
     <div class="header_search">
-         <h4><span><i class="fa fa-pencil" aria-hidden="true"></i></span> {{ trans('site.plans') }}</h4>
+         <h4><span><i class="fa fa-calendar" aria-hidden="true"></i></span> {{ trans('site.plans') }}</h4>
     </div>
     <ul>
         @foreach($plans as $plan)
             <li>
-                <a href=""><p>{{ $plan->title }}</p></a>
+                <a href="{{ route('user.plan.detail', $plan->id) }}"><p>{{ $plan->title }}</p></a>
             </li>
         @endforeach
     </ul>

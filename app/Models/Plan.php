@@ -72,6 +72,16 @@ class Plan extends Model
 
     public function scopeGetUser($query, $value)
     {
-        return $query->find($value)->with('user')->get();
+        return $query->find($value)->with('user')->first();
+    }
+
+    public function scopeTopRate($query)
+    {
+        return $query->OrderBy('created_at', 'asc')->Where('rate_average', '>=', '4.5')->Where('status', config('setting.status.approved'));
+    } 
+
+    public function scopeNewPlan($query)
+    {
+        return $query->orderBy('created_at', 'asc')->where('status', config('setting.status.approved'));
     }
 }

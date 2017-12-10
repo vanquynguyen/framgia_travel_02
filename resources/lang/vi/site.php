@@ -172,4 +172,9 @@ return [
     'pay_stripe' => 'Thanh toán bằng stripe',
     'payment_error' => 'Lỗi thanh toán',
     'thank_service' => 'Cảm ơn đã sử dụng dịch vụ của chúng tôi !',
+    'top_rate' => 'Top đánh giá',
+    'top_booking' => 'Top đặt plan',
+    'hot' => 'Hot',
+    'new' => 'Mới',
+    'fork_plan_now' => 'Fork Plan Now!',
 ];

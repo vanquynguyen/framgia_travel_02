@@ -1,5 +1,9 @@
 @extends('sites.master')
 
+@section('style')
+    {{ Html::style('bowers/toastr/toastr.css')}}
+@endsection
+
 @section('content')
 
 <section class="bannercontainer">
@@ -9,7 +13,7 @@
                 <li data-transition="parallaxvertical" data-slotamount="5" data-masterspeed="700" data-title="Slide 1">
                     <img src="{{ asset('images/img_sites/home/slider/slider-01.jpg') }}" alt="slidebg1" data-bgfit="cover" data-bgposition="center center" data-bgrepeat="no-repeat">
                 </li>
-                <li data-transition="parallaxvertical" data-slotamount="5" data-masterspeed="1000" data-title="Slide 2">
+                <li  data-slotamount="5" data-masterspeed="1000" data-title="Slide 2">
                     <img src="{{ asset('images/img_sites/home/slider/slider-02.jpg') }}" alt="slidebg1" data-bgfit="cover" data-bgposition="center center" data-bgrepeat="no-repeat">
                 </li>
                 <li data-transition="parallaxvertical" data-slotamount="5" data-masterspeed="700" data-title="Slide 1">
@@ -19,6 +23,7 @@
                     <img src="{{ asset('images/img_sites/home/slider/slider-04.jpg') }}" alt="slidebg1" data-bgfit="cover" data-bgposition="center center" data-bgrepeat="no-repeat">
                 </li>
             </ul>
+            <div class="tp-rightarrow tparrows hesperiden" style="top: 50%; transform: matrix(1, 0, 0, 1, -105, -42); left: 100%;"></div>
         </div>
     </div>
 </section>
@@ -84,53 +89,126 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="sectionTitle">
+                    <h2><span class="lightBg">{{ trans('site.top_rate') }}</span></h2>
+                </div>
+            </div>
+        </div>
+        @foreach($planRates as $plan)
+            @php
+                $gallery = $plan->galleries->random(1)->first();
+            @endphp
+            <div class="col-sm-4 col-xs-12">
+                <div class="thumbnail deals">
+                    <img src="/images/{{ $gallery->image }}" alt="deal-image">
+                    <a href="{{ route('user.plan.detail', $plan->id) }}" class="pageLink"></a>
+                    <div class="discountInfo">
+                        <div class="discountOffer">
+                            <h4>{{ trans('site.hot') }}</h4>
+                        </div>
+                    </div>
+                    <div class="caption">
+                        <h4><a href="{{ route('user.plan.detail', $plan->id) }}" class="captionTitle">{{ $plan->title }}</a></h4>
+                        <p>{{ $plan->descriptions }}</p>
+                        <div class="detailsInfo">
+                            <h5>
+                                <span>{{ trans('site.start_from') }}</span>
+                                ${{ $plan->price }}
+                            </h5>
+                            <ul class="list-inline detailsBtn">
+                                <li><a href="{{ route('user.plan.detail', $plan->id) }}" class="btn buttonTransparent">{{ trans('site.details') }}</a></li>
+                                @if(Auth::check())
+                                    <li><a href='{{ route('user.plan.booking', $plan->id) }}' class="btn buttonTransparent">{{ trans('site.book_now') }}</a></li>
+                                @else
+                                    <li><a class="btn buttonTransparent" id="check_book">{{ trans('site.book_now') }}</a></li>
+                                @endif
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="sectionTitle">
+                    <h2><span class="lightBg">{{ trans('site.top_booking') }}</span></h2>
+                </div>
+            </div>
+        </div>
+        @foreach($planBookings as $booking)
+            @php
+                $gallery = $booking->plan->galleries->random(1)->first();
+            @endphp
+            <div class="col-sm-4 col-xs-12">
+                <div class="thumbnail deals">
+                    <img src="/images/{{ $gallery->image }}" alt="deal-image">
+                    <a href="{{ route('user.plan.detail', $plan->id) }}" class="pageLink"></a>
+                    <div class="discountInfo">
+                        <div class="discountOffer">
+                            <h4>{{ trans('site.hot') }}</h4>
+                        </div>
+                    </div>
+                    <div class="caption">
+                        <h4><a href="{{ route('user.plan.detail', $plan->id) }}" class="captionTitle">{{ $booking->plan->title }}</a></h4>
+                        <p>{{ $booking->plan->descriptions }}</p>
+                        <div class="detailsInfo">
+                            <h5>
+                                <span>{{ trans('site.start_from') }}</span>
+                                ${{ $booking->plan->price }}
+                            </h5>
+                            <ul class="list-inline detailsBtn">
+                                <li><a href="{{ route('user.plan.detail', $booking->plan->id) }}" class="btn buttonTransparent">{{ trans('site.details') }}</a></li>
+                                @if(Auth::check())
+                                    <li><a href='{{ route('user.plan.booking', $plan->id) }}' class="btn buttonTransparent">{{ trans('site.book_now') }}</a></li>
+                                @else
+                                    <li><a class="btn buttonTransparent" id="check_book">{{ trans('site.book_now') }}</a></li>
+                                @endif
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach 
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="sectionTitle">
                     <h2><span class="lightBg">{{ trans('site.new_plans') }}</span></h2>
                 </div>
             </div>
         </div>
-            @foreach($plans as $plan)
-                <div class="col-sm-4 col-xs-12">
-                    <div class="thumbnail deals">
-                        <img src="images/img_sites/home/deal/deal-01.jpg" alt="deal-image">
-                        <a href="single-package-right-sidebar.html" class="pageLink"></a>
-                        <div class="discountInfo">
-                            <div class="discountOffer">
-                                <h4>
-                                    50% <span>OFF</span>
-                                </h4>
-                            </div>
-                            <ul class="list-inline rating homePage">
-                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                                <li><i class="fa fa-star" aria-hidden="true"></i></li>
-                            </ul>
+        @foreach($planNews as $plan)
+            @php
+                $gallery = $plan->galleries->random(1)->first();
+            @endphp
+            <div class="col-sm-4 col-xs-12">
+                <div class="thumbnail deals">
+                    <img src="/images/{{ $gallery->image }}" alt="deal-image">
+                    <a href="{{ route('user.plan.detail', $plan->id) }}" class="pageLink"></a>
+                    <div class="discountInfo">
+                        <div class="discountOffer">
+                            <h4>{{ trans('site.new') }}</h4>
                         </div>
-                        <div class="caption">
-                            <h4><a href="single-package-right-sidebar.html" class="captionTitle">{{ $plan->title }}</a></h4>
-                            <p>{{ $plan->descriptions }}</p>
-                            <div class="detailsInfo">
-                                <h5>
-                                    <span>{{ trans('site.start_from') }}</span>
-                                    ${{ $plan->price }}
-                                </h5>
-                                <ul class="list-inline detailsBtn">
-                                    <li><a href="{{ route('user.plan.detail', $plan->id) }}" class="btn buttonTransparent">{{ trans('site.details') }}</a></li>
-                                    <li><a href='booking-1.html' class="btn buttonTransparent">{{ trans('site.book_now') }}</a></li>
-                                </ul>
-                            </div>
+                    </div>
+                    <div class="caption">
+                        <h4><a href="{{ route('user.plan.detail', $plan->id) }}" class="captionTitle">{{ $plan->title }}</a></h4>
+                        <p>{{ $plan->descriptions }}</p>
+                        <div class="detailsInfo">
+                            <h5>
+                                <span>{{ trans('site.start_from') }}</span>
+                                ${{ $plan->price }}
+                            </h5>
+                            <ul class="list-inline detailsBtn">
+                                <li><a href="{{ route('user.plan.detail', $plan->id) }}" class="btn buttonTransparent">{{ trans('site.details') }}</a></li>
+                                @if(Auth::check())
+                                    <li><a href='{{ route('user.plan.booking', $plan->id) }}' class="btn buttonTransparent">{{ trans('site.book_now') }}</a></li>
+                                @else
+                                    <li><a class="btn buttonTransparent" id="check_book">{{ trans('site.book_now') }}</a></li>
+                                @endif
+                            </ul>
                         </div>
                     </div>
                 </div>
-            @endforeach
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="btnArea">
-                    <a href="packages-grid.html" class="btn buttonTransparent">{{ trans('site.view_all') }}</a>
-                </div>
             </div>
-        </div>
+        @endforeach
     </div>
 </section>
 <!-- PROMOTION PARALLAX -->
@@ -163,7 +241,7 @@
                     <img class="media-object" src="images/img_sites/home/destination.jpg" alt="Destination">
                     </a>
                     <div class="media-body">
-                        <h3 class="media-heading">{{ trans('site.choose') }}<br>{{ trans('site.your_destinations') }}</h3>
+                        <h3 class="media-heading">{{ trans('site.choose') }}<br>{{ trans('site.your_destination') }}</h3>
                         <div class="clearfix">
                             <ul class="list-unstyled">
                                 <li><i class="fa fa-minus" aria-hidden="true"></i>Asia</li>
@@ -196,9 +274,6 @@
                                 <li><a href="destination-single-city.html"><i class="fa fa-square" aria-hidden="true"></i>Dictum</a></li>
                             </ul>
                         </div>
-                        <div class="media-btn">
-                            <a href="destination-cities.html" class="btn buttonTransparent">{{ trans('site.view_all') }}</a>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -214,7 +289,7 @@
                     <div class="icon">
                         <i class="fa fa-map-marker" aria-hidden="true"></i>
                     </div>
-                    <div class="counter">179</div>
+                    <div class="counter">{{ $totalProvince }}</div>
                     <h5>{{ trans('site.destinations') }}</h5>
                 </div>
             </div>
@@ -223,7 +298,7 @@
                     <div class="icon">
                         <i class="fa fa-gift" aria-hidden="true"></i>
                     </div>
-                    <div class="counter">48</div>
+                    <div class="counter">{{ $totalService }}</div>
                     <h5>{{ trans('site.plan_pack') }}</h5>
                 </div>
             </div>
@@ -232,7 +307,7 @@
                     <div class="icon">
                         <i class="fa fa-smile-o" aria-hidden="true"></i>
                     </div>
-                    <div class="counter">4562</div>
+                    <div class="counter">{{ $totalCustomer }}</div>
                     <h5>{{ trans('site.happy_clients') }}</h5>
                 </div>
             </div>
@@ -254,7 +329,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="sectionTitle">
-                    <h2><span>{{ trans('site.our_packages') }}</span></h2>
+                    <h2><span>{{ trans('site.provinces') }}</span></h2>
             </div>
         </div>
         <div class="row">
@@ -270,121 +345,33 @@
             </div>
         </div>
         <div class="row isotopeContainer">
-            <div class="col-sm-4 isotopeSelector asia">
-                <article class="">
-                    <figure>
-                        <img src="images/img_sites/home/packages/packages-1.jpg" alt="">
-                        <h4>Vestibulum Tour</h4>
-                        <div class="overlay-background">
-                            <div class="inner"></div>
-                        </div>
-                        <div class="overlay">
-                            <a class="fancybox-pop" href="single-package-fullwidth.html">
-                                <div class="overlayInfo">
-                                    <h5>{{ trans('site.start_from') }}<span>$399</span></h5>
-                                    <p><i class="fa fa-calendar" aria-hidden="true"></i>27 Jan, 2017</p>
-                                </div>
-                            </a>
-                        </div>
-                    </figure>
-                </article>
-            </div>
-            <div class="col-sm-4 isotopeSelector america africa">
-                <article class="">
-                    <figure>
-                        <img src="images/img_sites/home/packages/packages-2.jpg" alt="">
-                        <h4>Maecenas Tour</h4>
-                        <div class="overlay-background">
-                            <div class="inner"></div>
-                        </div>
-                        <div class="overlay">
-                            <a class="fancybox-pop" href="single-package-fullwidth.html">
-                                <div class="overlayInfo">
-                                    <h5>{{ trans('site.start_from') }}<span>$599</span></h5>
-                                    <p><i class="fa fa-calendar" aria-hidden="true"></i>09 Feb, 2017</p>
-                                </div>
-                            </a>
-                        </div>
-                    </figure>
-                </article>
-            </div>
-            <div class="col-sm-4 isotopeSelector africa">
-                <article class="">
-                    <figure>
-                        <img src="images/img_sites/home/packages/packages-3.jpg" alt="">
-                        <h4>Lobortis Tour</h4>
-                        <div class="overlay-background">
-                            <div class="inner"></div>
-                        </div>
-                        <div class="overlay">
-                            <a class="fancybox-pop" href="single-package-fullwidth.html">
-                                <div class="overlayInfo">
-                                    <h5>{{ trans('site.start_from') }}<span>$299</span></h5>
-                                    <p><i class="fa fa-calendar" aria-hidden="true"></i>14 Feb, 2017</p>
-                                </div>
-                            </a>
-                        </div>
-                    </figure>
-                </article>
-            </div>
-            <div class="col-sm-4 isotopeSelector asia america">
-                <article class="">
-                    <figure>
-                        <img src="images/img_sites/home/packages/packages-4.jpg" alt="">
-                        <h4>Leo Lacus Tour</h4>
-                        <div class="overlay-background">
-                            <div class="inner"></div>
-                        </div>
-                        <div class="overlay">
-                            <a class="fancybox-pop" href="single-package-fullwidth.html">
-                                <div class="overlayInfo">
-                                    <h5>{{ trans('site.start_from') }}<span>$399</span></h5>
-                                    <p><i class="fa fa-calendar" aria-hidden="true"></i>11 Jan, 2017</p>
-                                </div>
-                            </a>
-                        </div>
-                    </figure>
-                </article>
-            </div>
-            <div class="col-sm-4 isotopeSelector america">
-                <article class="">
-                    <figure>
-                        <img src="images/img_sites/home/packages/packages-5.jpg" alt="">
-                        <h4>Nullam Tour</h4>
-                        <div class="overlay-background">
-                            <div class="inner"></div>
-                        </div>
-                        <div class="overlay">
-                            <a class="fancybox-pop" href="single-package-fullwidth.html">
-                                <div class="overlayInfo">
-                                    <h5>{{ trans('site.start_from') }}<span>$199</span></h5>
-                                    <p><i class="fa fa-calendar" aria-hidden="true"></i>02 Feb, 2017</p>
-                                </div>
-                            </a>
-                        </div>
-                    </figure>
-                </article>
-            </div>
-            <div class="col-sm-4 isotopeSelector africa asia">
-                <article class="">
-                    <figure>
-                        <img src="images/img_sites/home/packages/packages-6.jpg" alt="">
-                        <h4>Hendrerit Tour</h4>
-                        <div class="overlay-background">
-                            <div class="inner"></div>
-                        </div>
-                        <div class="overlay">
-                            <a class="fancybox-pop" href="single-package-fullwidth.html">
-                                <div class="overlayInfo">
-                                    <h5>{{ trans('site.start_from') }}<span>$799</span></h5>
-                                    <p><i class="fa fa-calendar" aria-hidden="true"></i>26 Feb, 2017</p>
-                                </div>
-                            </a>
-                        </div>
-                    </figure>
-                </article>
-            </div>
+            @foreach($provinces as $province) 
+                <div class="col-sm-4 isotopeSelector asia">
+                    <article class="">
+                        <figure>
+                            <img src="{{ $province->image }}" alt="" height="300px">
+                            <h4>{{ $province->name }}</h4>
+                            <div class="overlay-background">
+                                <div class="inner"></div>
+                            </div>
+                            <div class="overlay">
+                                <a class="fancybox-pop" href="single-package-fullwidth.html">
+                                    <div class="overlayInfo">
+                                        <h5><span></span></h5>
+                                        <p><i class="fa fa-calendar" aria-hidden="true"></i>{{ substr($province->description, 0, 20) }}...</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </figure>
+                    </article>
+                </div>
+            @endforeach
+            <div class="row">{{ $provinces->links() }}</div>
         </div>
     </div>
 </section>
+@endsection
+@section('script')
+    {{ Html::script('bowers/toastr/toastr.js') }}
+    {{ Html::script('js/index.js') }}
 @endsection

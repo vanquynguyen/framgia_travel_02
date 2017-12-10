@@ -108,4 +108,9 @@ class User extends Authenticatable
     {
         return $query = User::Where('id', $id)->with('followingUsers.followerUser')->first();
     }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 }
